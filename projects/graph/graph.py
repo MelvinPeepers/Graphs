@@ -3,55 +3,125 @@ Simple graph implementation
 """
 from util import Stack, Queue  # These may come in handy
 
+"""
+# Create a Graph Data Structure that uses the Adjacency List
+# Adjacency List one of two comment ways to represent graphs in code.
+# In an adjacency list, the graph stores a list of vertices.
+# For each vertex, it stores a list of each connected vertex.
+"""
+
+"""
+Notice that this adjacency list doesn’t use any lists. The vertices collection 
+is a dictionary which lets us access each collection of edges in O(1) constant time. 
+Because the edges are contained in a set we can check for the existence of edges in O(1) constant time.
+"""
+
+"""
+class Graph:
+    def __init__(self):
+        self.vertices = {
+                          "A": {"B"},
+                          "B": {"C", "D"},
+                          "C": {"E"},
+                          "D": {"F", "G"},
+                          "E": {"C"},
+                          "F": {"C"},
+                          "G": {"A", "F"}
+                        }
+"""
+
 
 class Graph:
 
     """Represent a graph as a dictionary of vertices mapping labels to edges."""
 
     def __init__(self):
-        self.vertices = {}
+        self.vertices = {}  # empty
 
         """
+        
+        {
+            A: {},
+            B: {},
+            C: {},
+            D: {}
+        }
 
-           {
-               A :{B},
-               B: {C},
-               C: {},
-               D: {}
-           }
-           """
+        """
 
     def add_vertex(self, vertex_id):
         """
         Add a vertex to the graph.
         """
-        pass  # TODO
+        self.vertices[vertex_id] = set()  # an empty set()
 
-    def add_edge(self, v1, v2):
+    def add_edge(self, v1, v2):  # we want to add a Directed edge from v1 to v2
         """
         Add a directed edge to the graph.
         """
-        pass  # TODO
+        if v1 in self.vertices and v2 in self.vertices:
+            self.vertices[v1].add(v2)  # directed edge from v1 to v2 (A: {B},)
+        else:
+            raise IndexError("That vertex does not exist!")
 
+    # I'm at A where can I go? we want to have the ability to traverse. Get all the vertices
     def get_neighbors(self, vertex_id):
         """
         Get all neighbors (edges) of a vertex.
         """
-        pass  # TODO
+        return self.vertices[vertex_id]  # if the vertex id doesn't exist, it'll return None
 
     def bft(self, starting_vertex):
         """
         Print each vertex in breadth-first order
         beginning from starting_vertex.
         """
-        pass  # TODO
+        # create a plan_to_visit queue and add starting_vertex to it
+        plan_to_visit = Queue()
+        plan_to_visit.enqueue(starting_vertex)
+        # create a Set for visited_vertices
+        visited_vertices = set()
+
+        # while the plan_to_visit queue is not Empty:
+        while plan_to_visit.size() > 0:
+            # dequeue the first vertex on the queue
+            current_vertex = plan_to_visit.dequeue()
+            # if its not been visited
+            if current_vertex not in visited_vertices:
+                # print the vertex
+                print(current_vertex)
+                # mark it as visited, (add it to visited_vertices)
+                visited_vertices.add(current_vertex)
+                # add all neighbors to the queue
+                for neighbor in self.get_neighbors(current_vertex):
+                    if neighbor not in visited_vertices:
+                        plan_to_visit.enqueue(neighbor)
 
     def dft(self, starting_vertex):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
         """
-        pass  # TODO
+        # create a plan_to_visit queue and add starting_vertex to it
+        plan_to_visit = Stack()
+        plan_to_visit.push(starting_vertex)
+        # create a Set for visited_vertices
+        visited_vertices = set()
+
+        # while the plan_to_visit queue is not Empty:
+        while plan_to_visit.size() > 0:
+            # dequeue the first vertex on the stack
+            current_vertex = plan_to_visit.pop()
+            # if its not been visited
+            if current_vertex not in visited_vertices:
+                # print the vertex
+                print(current_vertex)
+                # mark it as visited, (add it to visited_vertices)
+                visited_vertices.add(current_vertex)
+                # add all neighbors to the stack
+                for neighbor in self.get_neighbors(current_vertex):
+                    if neighbor not in visited_vertices:
+                        plan_to_visit.push(neighbor)
 
     def dft_recursive(self, starting_vertex):
         """

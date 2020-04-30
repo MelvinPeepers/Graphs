@@ -1,6 +1,40 @@
 import random
 
 
+class Queue():
+    def __init__(self):
+        self.queue = []
+
+    def enqueue(self, value):
+        self.queue.append(value)
+
+    def dequeue(self):
+        if self.size() > 0:
+            return self.queue.pop(0)
+        else:
+            return None
+
+    def size(self):
+        return len(self.queue)
+
+
+class Graph:
+    def __init__(self):
+        self.vertices = {}
+
+    def add_vertex(self, vertex_id):
+        self.vertices[vertex_id] = set()
+
+    def add_edge(self, v1, v2):
+        if v1 in self.vertices and v2 in self.vertices:
+            self.vertices[v1].add(v2)
+        else:
+            raise IndexError("That vertex does not exist!")
+
+    def get_neighbors(self, vertex_id):
+        return self.vertices[vertex_id]
+
+
 class User:
     def __init__(self, name):
         self.name = name
@@ -46,7 +80,6 @@ class SocialGraph:
         self.last_id = 0
         self.users = {}
         self.friendships = {}
-        # !!!! IMPLEMENT ME
 
         # Add users
         for i in range(0, num_users):
@@ -66,7 +99,6 @@ class SocialGraph:
         for i in range(num_users * avg_friendships // 2):
             friendship = possible_friendships[i]
             self.add_friendship(friendship[0], friendship[1])
-        # Create friendships
 
     def get_all_social_paths(self, user_id):
         """
@@ -77,8 +109,26 @@ class SocialGraph:
 
         The key is the friend's ID and the value is the path.
         """
+
+        neighbors_to_visit = Queue()
         visited = {}  # Note that this is a dictionary, not a set
-        # !!!! IMPLEMENT ME
+        neighbors_to_visit.enqueue([user_id])
+        while neighbors_to_visit.size() > 0:
+            # dequeue the first path
+            current_path = neighbors_to_visit.dequeue()
+            # grab the last vertex
+            current_vertex = current_path[-1]
+            # if it has not been visited
+            if current_vertex not in visited:
+                # when we reach the unvisited vertex, add it to visited dict
+                # but also, add the whole path that lead us here
+                visited[current_vertex] = current_path
+                # get all neighbors and add the path + the neighbor to the queue
+                for neighbor in self.friendships[current_vertex]:
+                    path_copy = current_path.copy()
+                    path_copy.append(neighbor)
+                    neighbors_to_visit.enqueue(path_copy)
+
         return visited
 
 

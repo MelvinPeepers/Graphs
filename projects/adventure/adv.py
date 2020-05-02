@@ -17,7 +17,7 @@ world = World()
 map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
-room_graph=literal_eval(open(map_file, "r").read())
+room_graph = literal_eval(open(map_file, "r").read())
 world.load_graph(room_graph)
 
 # Print an ASCII map
@@ -25,10 +25,12 @@ world.print_rooms()
 
 player = Player(world.starting_room)
 
+# Don't touch any code above this point
+
+
 # Fill this out with directions to walk
 # traversal_path = ['n', 'n']
 traversal_path = []
-
 
 
 # TRAVERSAL TEST
@@ -41,22 +43,25 @@ for move in traversal_path:
     visited_rooms.add(player.current_room)
 
 if len(visited_rooms) == len(room_graph):
-    print(f"TESTS PASSED: {len(traversal_path)} moves, {len(visited_rooms)} rooms visited")
+    print(
+        f"TESTS PASSED: {len(traversal_path)} moves, {len(visited_rooms)} rooms visited")
 else:
     print("TESTS FAILED: INCOMPLETE TRAVERSAL")
     print(f"{len(room_graph) - len(visited_rooms)} unvisited rooms")
 
 
-
 #######
 # UNCOMMENT TO WALK AROUND
 #######
-player.current_room.print_room_description(player)
-while True:
-    cmds = input("-> ").lower().split(" ")
-    if cmds[0] in ["n", "s", "e", "w"]:
-        player.travel(cmds[0], True)
-    elif cmds[0] == "q":
-        break
-    else:
-        print("I did not understand that command.")
+#
+# REPL code. You can uncomment this and run python3 adv.py to walk around the map.
+#
+# player.current_room.print_room_description(player)
+# while True:
+#    cmds = input("-> ").lower().split(" ")
+#    if cmds[0] in ["n", "s", "e", "w"]:
+#        player.travel(cmds[0], True)
+#    elif cmds[0] == "q":
+#        break
+#    else:
+#        print("I did not understand that command.")
